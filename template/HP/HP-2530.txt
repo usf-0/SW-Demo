@@ -1,0 +1,106 @@
+enable
+conf t
+no telnet-server
+no web-management ssl
+ip ssh
+crypto key generate ssh rsa bits 2048
+ip ssh filetransfer
+console terminal ANSI
+
+hostname FR_HB9G2_SW_1
+
+banner motd %
+##############################################################
+WARNING!!!							
+This system is solely for the use of authorized users for   
+official purposes. You have no expectation of privacy in its
+use and to ensure that the system is functioning properly,  
+individuals using this computer system are subject to having
+all of their activities monitored and recorded by system    
+personnel. Use of this system evidences an express consent  
+to such monitoring and agreement that if such monitoring    
+reveals evidence of possible abuse or criminal activity,    
+system personnel may provide the results of such monitoring 
+to appropriate officials.					
+##############################################################
+%
+
+console baud-rate 9600
+interface 1
+name "HB9G2-PIL"
+no lacp
+exit
+interface 2
+name "HB9G2-SIL"
+no lacp
+exit
+interface 3
+name "fw-1-eth0"
+no lacp
+exit
+interface 4
+name "fw-2-eth0"
+no lacp
+exit
+interface 5
+name "fw-1-eth2"
+no lacp
+exit
+interface 6
+name "fw-2-eth2"
+no lacp
+exit
+interface 23
+name "intervention-ws"
+no lacp
+exit
+interface 24
+name "sw-interco"
+exit
+
+
+ip default-gateway 10.22.14.99
+vlan 1
+   name "unused"
+   no ip address
+   no untagged 1-24
+   exit
+vlan 42
+name "G_ADMIN-SWITCH-COLLECT"
+ip address 10.22.14.100 255.255.255.248
+tagged 3-4,24
+exit
+vlan 113
+name "G_HB9G2_PIL"
+untagged 1,23
+tagged 3-4,24
+exit
+vlan 119
+name "G_HB9G2_SIL"
+untagged 2
+tagged 3-4,24
+exit
+no web-management
+no lldp run
+no dhcp-relay
+no stack
+logging 172.20.88.23 tcp 22009
+logging severity info
+ip ssh cipher aes256-ctr
+ip ssh cipher aes256-cbc
+ip ssh timeout 10
+
+interface vlan 1
+disable layer3
+exit
+primary-vlan 42
+management-vlan 42
+
+timesync sntp
+sntp enable
+sntp server priority 1 172.31.4.180
+sntp server priority 2 172.31.71.18
+sntp unicast
+ip ssh timeout 60	
+console idle-timeout 900
+wr mem

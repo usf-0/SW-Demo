@@ -1,0 +1,167 @@
+configure terminal
+!
+!
+hostname FR-{{ hotel_code }}-SW-1
+!
+!
+!
+username admininstall password encrypted $15$CoyfsufDqvzgMg0Y$Z/eVA1out4StFUULMfOlQcJj34n9i7IQHne7PY2UBUus6/YAiZzCZA3z1yMgdfDVZB7d6JWccOlkGuCHMw6BgQ== privilege 15
+!
+!
+!
+clock source sntp
+clock timezone UTC +1 
+clock summer-time UTC recurring last Sun Mar 2:00 last Sun Oct 3:00
+sntp unicast client enable
+sntp server 172.31.71.18
+sntp server 172.31.4.180
+!
+!
+ip domain name accor.net
+!
+crypto key generate rsa
+Y
+!
+!
+!
+!
+ip ssh server
+ip ssh password-auth
+!
+!
+!
+!
+spanning-tree mode rstp
+!
+!
+!
+vlan 42 name admin-switch-guest
+!
+!
+vlan 113 name Main-internet-access
+!
+!
+vlan 119 name Backup-internet-access
+!
+!
+!
+interface GigabitEthernet1
+ description H5035-PIL
+ switchport access vlan 113
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2
+ description H5035-SIL
+ switchport access vlan 119
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet3
+ description fw-1-eth0
+ switchport trunk allowed vlan 42,113,119
+ switchport mode trunk
+ spanning-tree portfast
+!
+interface GigabitEthernet4
+ description fw-2-eth0
+ switchport trunk allowed vlan 42,113,119
+ switchport mode trunk
+ spanning-tree portfast
+!
+!
+interface GigabitEthernet23
+ description intervention-ws
+ switchport access vlan 113
+ switchport mode access
+!
+interface GigabitEthernet24
+ description Other-Switch
+ switchport mode trunk
+ spanning-tree link-type point-to-point
+!
+!
+!
+interface Vlan1
+ shutdown
+!
+!
+!
+interface Vlan42
+ ip address 10.20.157.92 255.255.255.248
+ no shutdown
+!
+!
+!
+ip default-gateway 10.20.157.91
+!
+!
+logging host 172.20.88.23 port 22008
+no logging console
+!
+snmp-server contact IT.OPERATIONSSERVICES.NETWORK@accor.com
+snmp-server engineid local default
+YY
+snmp-server group snmpv3group v3 priv
+snmp-server user snmpv3user snmpv3group v3 auth sha @cc0rf0rc3 priv @cc0rf0rc3
+snmp server
+!
+!
+!
+banner exec $
+REMEMBER!!!
+This system is solely for the use of authorized users for
+official purposes. You have no expectation of privacy in its
+use and to ensure that the system is functioning properly,
+individuals using this computer system are subject to having
+all of their activities monitored and recorded by system
+personnel. Use of this system evidences an express consent
+to such monitoring and agreement that if such monitoring
+reveals evidence of possible abuse or criminal activity,
+system personnel may provide the results of such monitoring
+to appropriate officials.
+$
+!
+!
+!
+banner login $
+WARNING!!!
+This system is solely for the use of authorized users for
+official purposes. You have no expectation of privacy in its
+use and to ensure that the system is functioning properly,
+individuals using this computer system are subject to having
+all of their activities monitored and recorded by system
+personnel. Use of this system evidences an express consent
+to such monitoring and agreement that if such monitoring
+reveals evidence of possible abuse or criminal activity,
+system personnel may provide the results of such monitoring
+to appropriate officials.
+$
+!
+!
+!
+!
+no pnp enable
+no bonjour enable
+no bonjour interface range vlan 1
+no macro auto
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+voice vlan oui-table remove 0001e3
+voice vlan oui-table remove 00036b
+voice vlan oui-table remove 00096e
+voice vlan oui-table remove 000fe2
+voice vlan oui-table remove 0060b9
+voice vlan oui-table remove 00d01e
+voice vlan oui-table remove 00e075
+voice vlan oui-table remove 00e0bb
+!
+!
+end
+!
+wr
+!

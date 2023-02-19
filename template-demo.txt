@@ -1,0 +1,12 @@
+
+{{ iso_code }}
+{{ hotel_code }}
+{{ sw_number }}
+
+{{ vlan_id }}
+{{ vlan_name }}
+
+
+{{ ip_address }}
+
+{{ default_ip }}

@@ -1,0 +1,202 @@
+configure terminal
+user admininstall group administrators password ciphertext AQBapYCPaTA8Y0/fW03rhBZ92UylY1bhrkywDrakElgQ5wTDYgAAAAY0NLLEhioYrMjsPWLCaKmSH0EFyJtLJ31Y6yUQPA1JEM2sDWc8YT46Cae29KEjmHP3AxNzKEefOY+Fz793AKMgCigmcNkXRxFcAf1kztAU9Mg/LzK3t0HOKjTCxgtCvyVW
+!
+no https-server vrf default
+!
+ssh server vrf default
+!
+ip dns domain-name accor.net
+!
+hostname FR-H0000-SW-1
+!
+clock timezone europe/paris
+no cdp enable
+ntp server 172.31.4.180
+ntp server 172.31.71.18
+ntp enable
+!
+no ntp server pool.ntp.org minpoll 4 maxpoll 4 iburst
+!
+logging 172.20.88.23 tcp 22009
+!
+!
+snmp-server vrf default
+!
+snmp-server snmpv3-only
+!
+snmpv3 user snmpv3user auth sha auth-pass plaintext @cc0rf0rc3 priv aes priv-pass plaintext @cc0rf0rc3
+!
+!
+!
+banner motd $
+##############################################################
+WARNING!!!							
+This system is solely for the use of authorized users for   
+official purposes. You have no expectation of privacy in its
+use and to ensure that the system is functioning properly,  
+individuals using this computer system are subject to having
+all of their activities monitored and recorded by system    
+personnel. Use of this system evidences an express consent  
+to such monitoring and agreement that if such monitoring    
+reveals evidence of possible abuse or criminal activity,    
+system personnel may provide the results of such monitoring 
+to appropriate officials.					
+##############################################################
+$
+!
+banner exec $
+##############################################################
+WARNING!!!							
+This system is solely for the use of authorized users for   
+official purposes. You have no expectation of privacy in its
+use and to ensure that the system is functioning properly,  
+individuals using this computer system are subject to having
+all of their activities monitored and recorded by system    
+personnel. Use of this system evidences an express consent  
+to such monitoring and agreement that if such monitoring    
+reveals evidence of possible abuse or criminal activity,    
+system personnel may provide the results of such monitoring 
+to appropriate officials.					
+##############################################################
+$
+!
+vlan 42
+name Admin
+!
+vlan 102
+name interco-wifi-guest-auth
+!
+vlan 103
+name wifi-staff
+!
+vlan 106
+name BANK-PAYMENT
+!
+vlan 107
+name DYNAMIC-SIGNAGE
+!
+vlan 110
+name MUSIC-LOBBY
+!
+vlan 111
+name WEB-CORNER
+!
+vlan 113
+name Main-internet-access
+!
+vlan 119
+name Backup-internet-access
+!
+vlan 117
+name MAIN-WIFI
+!
+vlan 137
+name PRINTERS
+!
+interface 1/1/1
+    no shutdown
+    description PIL-H0000
+    vlan access 113
+interface 1/1/2
+    no shutdown
+    description SIL-H0000
+    vlan access 119
+interface 1/1/3
+    no shutdown
+    description fw-1-eth0
+    vlan trunk native 1
+    vlan trunk allowed 42,113,119
+interface 1/1/4
+    no shutdown
+    description fw-2-eth0
+    vlan trunk native 1
+    vlan trunk allowed 42,113,119
+interface 1/1/5
+    no shutdown
+    description fw-1-eth2
+    vlan trunk native 1
+    vlan trunk allowed 102-103,106,107,110,111,117,137
+interface 1/1/6
+    no shutdown
+    description fw-2-eth2
+    vlan trunk native 1
+    vlan trunk allowed 102-103,106,107,110,111,117,137
+interface 1/1/7
+    no shutdown
+    description wifi-system
+    no routing
+    vlan trunk native 1
+    vlan trunk allowed 102,103,117
+
+interface 1/1/9
+    no shutdown
+    description DYNAMIC-SIGNAGE
+    vlan access 137
+
+interface 1/1/10
+    no shutdown
+    description PRINTERS
+    vlan access 137
+
+interface 1/1/11
+    no shutdown
+    description WEB-CORNER
+    vlan access 111
+
+interface 1/1/12
+    no shutdown
+    description WEB-CORNER
+    vlan access 111
+
+interface 1/1/13
+    no shutdown
+    description WEB-CORNER
+    vlan access 111
+
+interface 1/1/16
+    no shutdown
+    description MUSIC-LOBBY
+    vlan access 110
+
+interface 1/1/20
+    no shutdown
+    description BANK-PAYMENT
+    vlan access 106
+
+interface 1/1/21
+    no shutdown
+    description BANK-PAYMENT
+    vlan access 106
+
+interface 1/1/22
+    no shutdown
+    description BANK-PAYMENT
+    vlan access 106
+
+interface 1/1/23
+    no shutdown
+    description BANK-PAYMENT
+    vlan access 106
+
+interface 1/1/24
+    no shutdown
+    description Other-switch
+    no routing
+    vlan trunk native 1
+    vlan trunk allowed all
+!
+!
+interface vlan 1
+    shutdown
+    no ip dhcp
+interface vlan 42
+    ip address 10.20.20.34/29
+!
+ip route 0.0.0.0/0 10.20.20.33
+!
+aruba-central
+disable
+!
+end
+!
+wr mem
